@@ -1,0 +1,22 @@
+{
+  "name": "the-forgotten-client",
+  "version-string": "1.0.0",
+  "builtin-baseline": "030cfaa24de9ea1bbf0a4d9c615ce7312ba77af1",
+  "dependencies": [
+    "curl",
+    "liblzma",
+    "opengl",
+    "sdl2",
+    "spdlog",
+    "vulkan-headers",
+    "zlib",
+    {
+      "name": "gmp",
+      "platform": "linux"
+    },
+    {
+      "name": "mpir",
+      "platform": "windows"
+    }
+  ]
+}

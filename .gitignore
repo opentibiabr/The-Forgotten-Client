@@ -73,3 +73,10 @@ ipch/
 *.psess
 *.vsp
 *.vspx
+
+#Build folder
+build
+
+#VSCode
+.history
+.vscode
