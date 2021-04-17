@@ -192,7 +192,7 @@ class SurfaceDirect3D9 : public Surface
 		std::circular_buffer<Uint64, MAX_SPRITES> m_spritesIds;
 
 		Direct3D9Texture* m_pictures = NULL;
-		char* m_software = "Direct3D 9.0";
+		const char* m_software = "Direct3D 9.0";
 		char* m_hardware = NULL;
 
 		Direct3D9Texture m_gameWindow;

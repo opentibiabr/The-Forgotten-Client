@@ -60,18 +60,26 @@ endif()
 # Packages / Libs
 # *****************************************************************************
 
-find_package(ZLIB REQUIRED)
-find_package(SDL2 CONFIG REQUIRED)
-find_package(spdlog CONFIG REQUIRED)
-find_package(CURL CONFIG REQUIRED)
-# find_path(VULKAN_HEADERS_INCLUDE_DIRS "vulkan/vk_icd.h")
-find_package(liblzma CONFIG REQUIRED)
+# find_package(SDL2 CONFIG REQUIRED)
+# find_package(lzma CONFIG REQUIRED)
+# find_package(liblzma CONFIG REQUIRED)
+# find_package(Vulkan-Headers CONFIG REQUIRED)
 
-find_package(OpenGL REQUIRED)
+find_package(ZLIB REQUIRED)
+find_package(CURL CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
 find_package(GMP REQUIRED)
+find_package(SDL2 CONFIG REQUIRED)
+
+# find_package(OpenGL REQUIRED)
+find_path(OPENGL_REGISTRY_INCLUDE_DIRS "GL/glcorearb.h")
+
+if(MSVC)
+  find_path(DX_INCLUDE_DIRS "dx/debug.h")
+  find_package(directxtk CONFIG REQUIRED)
+endif()
 
 include(GNUInstallDirs)
-
 
 # *****************************************************************************
 # Library Configuration
@@ -168,7 +176,6 @@ target_sources(${PROJECT_NAME}
     ${CMAKE_CURRENT_LIST_DIR}/map.cpp
     ${CMAKE_CURRENT_LIST_DIR}/outputMessage.cpp
     ${CMAKE_CURRENT_LIST_DIR}/protocol.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/protocolgame1260.cpp
     ${CMAKE_CURRENT_LIST_DIR}/protocolgame.cpp
     ${CMAKE_CURRENT_LIST_DIR}/protocollogin.cpp
     ${CMAKE_CURRENT_LIST_DIR}/protocolloginHttp.cpp
@@ -194,24 +201,43 @@ target_sources(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE
-    # ${VULKAN_HEADERS_INCLUDE_DIRS}
+    ${GMP_INCLUDE_DIR}
+    ${VULKAN_HEADERS_INCLUDE_DIRS}
+    ${OPENGL_REGISTRY_INCLUDE_DIRS}
+    ${DX_INCLUDE_DIRS}
 )
 
-target_link_libraries(${PROJECT_NAME}
-  PUBLIC
-    SDL2::SDL2-static
-    CURL::libcurl
-    liblzma::liblzma
-    # Vulkan-Headers::Vulkan-Headers
-    OpenGL::OpenGL
-    OpenGL::GLX
-    OpenGL::EGL
-    ZLIB::ZLIB
-    spdlog::spdlog
-    ${GMP_LIBRARIES}
-)
+if(MSVC)
+  target_link_libraries(${PROJECT_NAME}
+    PRIVATE
+      CURL::libcurl
+      spdlog::spdlog
+      ZLIB::ZLIB
+      ${GMP_LIBRARIES}
+      # liblzma::liblzma
+      # Vulkan-Headers::Vulkan-Headers
+      SDL2::SDL2-static
+      Microsoft::DirectXTK
+  )
+else()
+  target_link_libraries(${PROJECT_NAME}
+    PRIVATE
+      CURL::libcurl
+      spdlog::spdlog
+      ZLIB::ZLIB
+      ${GMP_LIBRARIES}
+      # liblzma::liblzma
+      # Vulkan-Headers::Vulkan-Headers
+      SDL2::SDL2-static
+    )
+endif()
 
-target_compile_options(${PROJECT_NAME} PUBLIC -fpermissive -march=native -mfma4)
+if(MSVC)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE -D_USE_MATH_DEFINES=ON -DMSVC=ON )
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -std:c++latest -permissive-)
+else()
+  target_compile_options(${PROJECT_NAME} PRIVATE -fpermissive -march=native -mfma4)
+endif(MSVC)
 
 # Force cpu family
 # target_compile_options(${PROJECT_NAME} PUBLIC -fpermissive -march=skylake -mfma4)

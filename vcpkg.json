@@ -5,17 +5,51 @@
   "dependencies": [
     "curl",
     "liblzma",
-    "opengl",
-    "sdl2",
     "spdlog",
-    "vulkan-headers",
     "zlib",
+    "sdl2",
     {
       "name": "gmp",
       "platform": "linux"
     },
     {
       "name": "mpir",
+      "platform": "windows"
+    },
+    {
+      "name": "opengl",
+      "platform": "windows"
+    },
+    {
+      "name": "freeglut",
+      "platform": "windows"
+    },
+    {
+      "name": "glew",
+      "platform": "windows"
+    },
+    {
+      "name": "glad",
+      "platform": "windows"
+    },
+    {
+      "name": "glm",
+      "platform": "windows"
+    },
+    {
+      "name": "directx-headers",
+      "platform": "windows"
+    },
+    {
+      "name": "dx",
+      "platform": "windows"
+    },
+    {
+      "name": "directxtk",
+      "platform": "windows"
+    },
+    {
+      "name": "glfw3",
       "platform": "windows"
     }
   ]
