@@ -236,8 +236,8 @@ void Game::clientChangeVersion(Uint32 clientVersion, Uint32 fileVersion)
 		enableGameFeature(GAME_FEATURE_DETAILED_EXPERIENCE_BONUS);
 		enableGameFeature(GAME_FEATURE_STORE_HIGHLIGHTS2);
 	}
-	if(fileVersion >= 1100)
-		enableGameFeature(GAME_FEATURE_NEWFILES_STRUCTURE);
+	// if(fileVersion >= 1100)
+	// 	enableGameFeature(GAME_FEATURE_NEWFILES_STRUCTURE);
 	if(clientVersion >= 1102)
 	{
 		enableGameFeature(GAME_FEATURE_CLIENT_SENDSERVERNAME);
@@ -292,6 +292,11 @@ void Game::clientChangeVersion(Uint32 clientVersion, Uint32 fileVersion)
 		enableGameFeature(GAME_FEATURE_TOURNAMENTS);
 	if(clientVersion >= 1220)
 		enableGameFeature(GAME_FEATURE_ACCOUNT_EMAIL);
+	if(clientVersion >= 1260) {
+		disableGameFeature(GAME_FEATURE_ITEM_ANIMATION_PHASES);
+		enableGameFeature(GAME_FEATURE_QUIVER);
+	}
+
 }
 
 void Game::processGMActions(std::vector<Uint8> privileges)

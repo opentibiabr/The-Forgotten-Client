@@ -1,0 +1,56 @@
+{
+  "name": "the-forgotten-client",
+  "version-string": "1.0.0",
+  "builtin-baseline": "030cfaa24de9ea1bbf0a4d9c615ce7312ba77af1",
+  "dependencies": [
+    "curl",
+    "liblzma",
+    "spdlog",
+    "zlib",
+    "sdl2",
+    {
+      "name": "gmp",
+      "platform": "linux"
+    },
+    {
+      "name": "mpir",
+      "platform": "windows"
+    },
+    {
+      "name": "opengl",
+      "platform": "windows"
+    },
+    {
+      "name": "freeglut",
+      "platform": "windows"
+    },
+    {
+      "name": "glew",
+      "platform": "windows"
+    },
+    {
+      "name": "glad",
+      "platform": "windows"
+    },
+    {
+      "name": "glm",
+      "platform": "windows"
+    },
+    {
+      "name": "directx-headers",
+      "platform": "windows"
+    },
+    {
+      "name": "dx",
+      "platform": "windows"
+    },
+    {
+      "name": "directxtk",
+      "platform": "windows"
+    },
+    {
+      "name": "glfw3",
+      "platform": "windows"
+    }
+  ]
+}

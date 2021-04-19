@@ -1,0 +1,78 @@
+---
+
+name: Build on Ubuntu
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - v*
+
+    tags:
+      - v*
+
+  pull_request:
+    paths:
+      - cmake/**
+      - src/**
+      - CMakeLists.txt
+      - .github/**
+
+jobs:
+  job:
+    name: ${{ matrix.os }}-${{ matrix.buildtype }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, ubuntu-20.04]
+        buildtype: [Debug, Release]
+        include:
+          - os: ubuntu-18.04
+            triplet: x64-linux
+          - os: ubuntu-20.04
+            triplet: x64-linux
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: lukka/get-cmake@latest
+
+      - name: Install Dependencies
+        run: >
+          sudo apt-get update && sudo apt-get install ccache build-essential 
+          mesa-common-dev libgl-dev python3 libxinerama-dev libxcursor-dev 
+          xorg-dev libglu1-mesa-dev autoconf libtool python3-setuptools 
+          python3-mako flex bison && sudo apt-get install build-essential
+          libgmp-dev zip wget tar binutils freeglut3-dev git libgl1-mesa-dev
+          libgl1-mesa-glx libglew-dev libglew1.5 libglew1.5-dev libglfw3
+          libglfw3-dev libglm-dev libglu1-mesa libglu1-mesa-dev libgmp-dev
+          libgmp10 libgmp3-dev libgmpxx4ldbl libssl-dev libx11-dev
+          mesa-common-dev openssl sudo xorg-dev
+
+      - name: CCache
+        id: ccache
+        uses: actions/cache@v2
+        with:
+          path: ~/.ccache
+          key: ${{ matrix.os }}-${{ matrix.buildtype }}-${{ hashFiles('**/src') }}
+          restore-keys: |
+            ${{ matrix.os }}-${{ matrix.buildtype }}-${{ hashFiles('**/src') }}
+            ${{ matrix.os }}-${{ matrix.buildtype }}-
+
+      - name: Restore artifacts, or setup vcpkg (do not install any package)
+        uses: lukka/run-vcpkg@v7
+        with:
+          setupOnly: true
+          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+          appendedCacheKey: ${{ hashFiles( '**/vcpkg.json' ) }}
+          vcpkgTriplet: ${{ matrix.triplet }}
+          additionalCachedPaths: ${{ github.workspace }}/build/vcpkg_installed
+          vcpkgGitCommitId: 030cfaa24de9ea1bbf0a4d9c615ce7312ba77af1
+
+      - name: 'Run CMake with Ninja, install dependencies with vcpkg, build with CMake'
+        uses: lukka/run-cmake@v3
+        with:
+          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+          useVcpkgToolchainFile: true
+          buildDirectory: ${{ github.workspace }}/build/
+          cmakeBuildType: ${{ matrix.buildtype }}

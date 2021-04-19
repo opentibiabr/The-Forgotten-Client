@@ -198,7 +198,7 @@ class SurfaceDirect3D11 : public Surface
 		std::circular_buffer<Uint64, MAX_SPRITES> m_spritesIds;
 
 		Direct3D11Texture* m_pictures = NULL;
-		char* m_software = "Direct3D";
+		const char* m_software = "Direct3D";
 		char* m_hardware = NULL;
 
 		Direct3D11Texture m_gameWindow;

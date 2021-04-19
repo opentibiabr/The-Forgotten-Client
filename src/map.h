@@ -52,12 +52,38 @@ static const Sint32 MAX_NODES_COMPLEXITY = 50000;
 
 static const Sint32 MAP_NORMALWALKFACTOR = 1;
 static const Sint32 MAP_DIAGONALWALKFACTOR = 2;
+#ifdef MSVC
+template<typename _Arg1, typename _Arg2, typename _Result>
+  struct binary_function
+  {
+    /// @c first_argument_type is the type of the first argument
+    typedef _Arg1 	first_argument_type; 
 
-struct CompareNode : std::binary_function<std::pair<Sint32, Sint32>, std::pair<Sint32, Sint32>, bool> {
+    /// @c second_argument_type is the type of the second argument
+    typedef _Arg2 	second_argument_type;
+
+    /// @c result_type is the return type
+    typedef _Result 	result_type;
+  };
+
+struct CompareNode : binary_function<std::pair<Sint32, Sint32>, std::pair<Sint32, Sint32>, bool> {
 	bool operator()(std::pair<Sint32, Sint32> a, std::pair<Sint32, Sint32> b) const {
 		return b.first < a.first;
 	}
 };
+#else
+struct CompareNode : std::binary_function<
+                        std::pair<Sint32, Sint32>, 
+                        std::pair<Sint32, Sint32>, 
+                        bool> {
+                          
+	bool operator()(std::pair<Sint32, Sint32> a, 
+                  std::pair<Sint32, Sint32> b) const {
+		return b.first < a.first;
+
+	}
+};
+#endif
 
 class PQueue_Nodes : public std::priority_queue<std::pair<Sint32, Sint32>, std::vector<std::pair<Sint32, Sint32>>, CompareNode>
 {
@@ -151,8 +177,9 @@ class Map
 
 		Creature* m_localCreature = NULL;
 		Position m_centerPosition;
-		ScreenText m_onscreenMessages[ONSCREEN_MESSAGE_LAST] = {ONSCREEN_MESSAGE_BOTTOM, ONSCREEN_MESSAGE_CENTER_LOW, ONSCREEN_MESSAGE_CENTER_HIGH, ONSCREEN_MESSAGE_TOP};
-		
+		// ScreenText m_onscreenMessages[ONSCREEN_MESSAGE_LAST] = {ONSCREEN_MESSAGE_BOTTOM, ONSCREEN_MESSAGE_CENTER_LOW, ONSCREEN_MESSAGE_CENTER_HIGH, ONSCREEN_MESSAGE_TOP};
+		ScreenText *m_onscreenMessages[OnscreenMessages::ONSCREEN_MESSAGE_LAST];
+
 		Uint32 m_magicEffectsTime = 0;
 		Uint32 m_distanceEffectsTime = 0;
 

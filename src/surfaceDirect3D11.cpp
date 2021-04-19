@@ -1431,7 +1431,7 @@ unsigned char* SurfaceDirect3D11::getScreenPixels(Sint32& width, Sint32& height,
 	{
 		SAFE_RELEASE(stagingTexture);
 		SDL_free(pixels);
-		return false;
+		return NULL;
 	}
 	if(stagingTextureDesc.Format == DXGI_FORMAT_B8G8R8A8_UNORM || stagingTextureDesc.Format == DXGI_FORMAT_B8G8R8X8_UNORM)
 	{
